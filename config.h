@@ -1,6 +1,11 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+// #define CHEAP_YELLOW_DISPLAY_CONF // Uncomment this line if using the CYD
+#ifdef CHEAP_YELLOW_DISPLAY_CONF
+  #include "config_cyd.h"
+#else
+
 // Controller Configuration
 // 0 = CONTROLLER_GPIO, 1 = CONTROLLER_NES, 
 // 2 = CONTROLLER_SNES, 3 = CONTROLLER_PSX
@@ -19,10 +24,15 @@
 #define SD_MISO_PIN 12
 #define SD_SCLK_PIN 14
 #define SD_CS_PIN -1
+#define SD_SPI_PORT HSPI 
+// Use VSPI or HSPI depending on your wiring.
+// SD_SPI_PORT should be the opposite SPI port from the one used by the display (e.g. if using HSPI for display, use VSPI for SD card, and vice versa).
+// VSPI: MOSI=23, MISO=19, SCLK=18, CS=5 
+// HSPI: MOSI=13, MISO=12, SCLK=14, CS=15
 
 // Button pins
 #define A_BUTTON 19
-#define B_BUTTON 22
+#define B_BUTTON 26
 #define LEFT_BUTTON 32
 #define RIGHT_BUTTON 33
 #define UP_BUTTON 15
@@ -31,20 +41,20 @@
 #define SELECT_BUTTON 16
 
 // NES controller pins
-#define CONTROLLER_NES_CLK 22
-#define CONTROLLER_NES_LATCH 27
+#define CONTROLLER_NES_CLK 32
+#define CONTROLLER_NES_LATCH 33
 #define CONTROLLER_NES_DATA 35
 
 // SNES controller pins
-#define CONTROLLER_SNES_CLK 22
-#define CONTROLLER_SNES_LATCH 27
+#define CONTROLLER_SNES_CLK 32
+#define CONTROLLER_SNES_LATCH 33
 #define CONTROLLER_SNES_DATA 35
 
 // PS1/PS2 controller pins
-#define CONTROLLER_PSX_DATA 35
-#define CONTROLLER_PSX_COMMAND 22
-#define CONTROLLER_PSX_ATTENTION 19
-#define CONTROLLER_PSX_CLK 23
+#define CONTROLLER_PSX_DATA 32
+#define CONTROLLER_PSX_COMMAND 33
+#define CONTROLLER_PSX_ATTENTION 26
+#define CONTROLLER_PSX_CLK 27
 
 #define DAC_PIN 0 // 0 = GPIO25, 1 = GPIO26
 
@@ -57,5 +67,7 @@
 #define I2S_BCLK_PIN   38   // Bit clock (BCLK)
 #define I2S_LRC_PIN    39   // Word select / Left-Right clock (LRC / WS)
 #define I2S_DOUT_PIN   40   // Serial data output (DIN)
+
+#endif
 
 #endif

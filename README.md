@@ -36,8 +36,9 @@ Want to make a PCB? NextPCB offers PCB fabrication and assembly services with fa
 - [Performance](#performance)
 - [Compatibility](#compatibility)
 - [Hardware Overview](#hardware-overview)
+  - [Original Hardware](#original-hardware)
+  - [Cheap Yellow Display](#cheap-yellow-display)
   - [Where to Buy](#where-to-buy)
-  - [Default Pin Setup](#default-pin-setup)
 - [Controls](#controls)
   - [Menu Access](#menu-access)
   - [Controller Button Mappings](#controller-button-mappings)
@@ -94,13 +95,15 @@ Feel free to open an issue if a game has glitches or fails to boot.
 ---
 
 ## Hardware Overview
+
+### Original Hardware
 Anemoia-ESP32 requires a dual-core ESP32 with a minimum of 1 MB flash memory and <u><strong>NO PSRAM IS REQUIRED</strong></u>.
 
 - ESP32
   - e.g. ESP32-DevKitC or ESP32-WROOM-32
-- A 320x240 SPI TFT screen (no touch needed)
+- A 240x320 SPI TFT screen (no touch needed)
   - Either an ST7789-based screen as depicted, or
-  - an ILI9341-based screen with 320x240 pixels
+  - an ILI9341-based screen with 240x320 pixels
 - Audio Amplifier
   - e.g. a PAM8403 or PAM8302
 - Speaker
@@ -115,22 +118,7 @@ Anemoia-ESP32 requires a dual-core ESP32 with a minimum of 1 MB flash memory and
 > [!NOTE]
 > ST7789-based displays are recommended as they seem to fare better with 80MHz SPI speeds and are the most compatible. ILI9341-based screens may experience screen problems at higher SPI speeds.
 
-
-## Where to Buy
-These are the recommended parts to use for this project.<br>
-*These are affiliate links. Buying through them helps support me at no extra cost to you. Thank you for your support.*
-
-- [ESP32](https://s.click.aliexpress.com/e/_c3B4YJhz)
-- [240x320 ST7789 Display](https://s.click.aliexpress.com/e/_c2wkMWbV)
-- [PAM8403 Amplifier Module](https://s.click.aliexpress.com/e/_c3EWffgT)
-- [MicroSD Card Module](https://s.click.aliexpress.com/e/_c3ORlv7p)
-- [TP4056 Charging Module](https://s.click.aliexpress.com/e/_c2xSu8Mn)
-- [S09 Buck Converter](https://s.click.aliexpress.com/e/_c4LFB5JD)
-- [SS12F17 Slide Switch](https://s.click.aliexpress.com/e/_c3DdrYLV)
-- [12×12×7.3mm Tactile Push Buttons](https://s.click.aliexpress.com/e/_c3ABhrhV)
-- [40mm Speaker](https://s.click.aliexpress.com/e/_c4Ci9359)
-
-## Default Pin Setup
+### Default Pin Setup
 ![Default pin schematic](https://github.com/user-attachments/assets/ded0f955-20be-4b0b-87f4-d7528cb23e67)
 
 ### TFT Display
@@ -139,7 +127,7 @@ These are the recommended parts to use for this project.<br>
 | MOSI     | GPIO23         |
 | MISO     | -1 (N/A)       |
 | SCLK     | GPIO18         |
-| CS       | GPIO4          |
+| CS       | GPIO5          |
 | DC       | GPIO2          |
 | RST      | EN             |
 
@@ -172,7 +160,7 @@ There are currently three input methods: Tactile push buttons, an NES/SNES contr
 | Left     | GPIO32 & GND         |
 | Right    | GPIO33 & GND         |
 | Up       | GPIO15 & GND         |
-| Down     | GPIO5 & GND          |
+| Down     | GPIO4 & GND          |
 | Start    | GPIO27 & GND         |
 | Select   | GPIO16 (RX2) & GND   |
 <br>
@@ -183,8 +171,8 @@ There are currently three input methods: Tactile push buttons, an NES/SNES contr
 
 | Signal   | ESP32 Pins     |
 |----------|----------------|
-| Clock    | GPIO22         |
-| Latch    | GPIO27         |
+| Clock    | GPIO32         |
+| Latch    | GPIO33         |
 | Data     | GPIO35         |
 <br>
 
@@ -194,15 +182,51 @@ There are currently three input methods: Tactile push buttons, an NES/SNES contr
 
 | Signal    | ESP32 Pins     |
 |-----------|----------------|
-| Data      | GPIO35         |
-| Command   | GPIO22         |
-| Attention | GPIO19         |
-| Clock     | GPIO23         |
+| Data      | GPIO32         |
+| Command   | GPIO33         |
+| Attention | GPIO26         |
+| Clock     | GPIO27         |
 <br>
 
 
 Also connect the power and ground lines if using a controller. 
 Most controllers should work fine from 3.3V power supply. 
+
+### Cheap Yellow Display
+
+[Cheap Yellow Displays](https://github.com/witnessmenow/ESP32-Cheap-Yellow-Display) (CYD) are an all-in-one ESP32 board that comes with most of the hardware needed in this project already integrated, making it ideal for Anemoia-ESP32. Currently only CYDs with an ST7789 display, such as the CYD2USB, are supported.
+
+**Hardware Needed:**
+- Cheap Yellow Display with a 240x320 ST7789 display
+- NES/SNES controller
+- Speaker (optional) - Can be attached with a 1.25mm JST connector to "SPEAK" or soldered directly
+
+### NES/SNES controller
+
+| Signal   | ESP32 Pins     |
+|----------|----------------|
+| Clock    | GPIO22 (CN1/P3)|
+| Latch    | GPIO27 (CN1)   |
+| Data     | GPIO35 (P3)    |
+
+---
+
+## Where to Buy
+These are the recommended parts to use for this project.<br>
+*These are affiliate links. Buying through them helps support me at no extra cost to you. Thank you for your support.*
+
+- [ESP32](https://s.click.aliexpress.com/e/_c3B4YJhz)
+- [240x320 ST7789 Display](https://s.click.aliexpress.com/e/_c2wkMWbV)
+- [PAM8403 Amplifier Module](https://s.click.aliexpress.com/e/_c3EWffgT)
+- [MicroSD Card Module](https://s.click.aliexpress.com/e/_c3ORlv7p)
+- [TP4056 Charging Module](https://s.click.aliexpress.com/e/_c2xSu8Mn)
+- [S09 Buck Converter](https://s.click.aliexpress.com/e/_c4LFB5JD)
+- [SS12F17 Slide Switch](https://s.click.aliexpress.com/e/_c3DdrYLV)
+- [12×12×7.3mm Tactile Push Buttons](https://s.click.aliexpress.com/e/_c3ABhrhV)
+- [40mm Speaker](https://s.click.aliexpress.com/e/_c4Ci9359)
+
+### Cheap Yellow Display
+- [ST7789 CYD](https://s.click.aliexpress.com/e/_c30TMd05)
 
 ---
 

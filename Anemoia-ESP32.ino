@@ -23,7 +23,7 @@
 
 HWConfig hw_config;
 TFT_eSPI screen = TFT_eSPI();
-SPIClass SD_SPI(HSPI);
+SPIClass SD_SPI(SD_SPI_PORT);
 UI ui(&screen);
 Cartridge* cart;
 void setup() 
@@ -31,6 +31,7 @@ void setup()
     // Turn off Wifi and Bluetooth to reduce CPU overhead
     #ifdef DEBUG
         Serial.begin(115200);
+        log_pin_config();
     #endif
     LOG("Setup initialized");
     
@@ -43,6 +44,16 @@ void setup()
     esp_bt_controller_mem_release(ESP_BT_MODE_BTDM);
 
     hw_config = loadConfig();
+    setupI2SDAC();
+
+    // Initialize TFT screen
+    screen.begin();
+    screen.setRotation(hw_config.rotation);
+    #ifndef DISABLE_DMA
+        screen.initDMA();
+    #endif
+    screen.fillScreen(BG_COLOR);
+    screen.startWrite();
 
     if (hw_config.backlight)
     {
@@ -50,17 +61,6 @@ void setup()
         ledcAttach(TFT_BACKLIGHT_PIN, BL_FREQ, BL_RESOLUTION);
         ledcWrite(TFT_BACKLIGHT_PIN, 255);
     }
-
-    setupI2SDAC();
-
-    // Initialize TFT screen
-    screen.begin();
-    screen.setRotation(hw_config.rotation);
-    #ifndef TFT_PARALLEL
-        screen.initDMA();
-    #endif
-    screen.fillScreen(BG_COLOR);
-    screen.startWrite();
 
     // Initialize microsd card
     if(!initSD()) while (true);
@@ -74,7 +74,12 @@ void setup()
 void loop() 
 {
     cart = ui.selectGame();
-    emulate();
+    if (cart && cart->isValid())
+    {
+        emulate();
+    }
+
+    invalidCartridge();
 }
 
 #ifdef DEBUG
@@ -112,6 +117,7 @@ IRAM_ATTR void emulate()
     &polling_task_handle,
     0
     );
+    screen.setAddrWindow(32, 0, 256, 240);
 
     #ifdef DEBUG
         last_frame_time = esp_timer_get_time();
@@ -133,6 +139,7 @@ IRAM_ATTR void emulate()
                 vTaskResume(apu_task_handle);
                 next_frame = esp_timer_get_time() + FRAME_TIME;
                 nes.controller = 0;
+                screen.setAddrWindow(32, 0, 256, 240);
             }
         }
 
@@ -188,7 +195,7 @@ bool initSD()
         int x3 = (320 - w3) / 2;
         int x4 = (320 - w4) / 2;
 
-        screen.setTextColor(TFT_BLACK);
+        screen.setTextColor(TFT_WHITE);
         screen.drawString(txt1, x1, 56, 2);
         screen.drawString(txt2, x2, 88, 2);
         screen.drawString(txt3, x3, 120, 2);
@@ -196,8 +203,18 @@ bool initSD()
         return false;
     }
 
-    LOG("SD Card successfully initialized");
+    LOG("SD Card initialized.");
     return true;
+}
+
+void invalidCartridge()
+{
+    screen.fillScreen(BG_COLOR);
+    screen.setTextColor(TFT_WHITE);
+    screen.setTextDatum(MC_DATUM);
+    screen.drawString("ROM Mapper not supported!", screen.width() / 2, screen.height() / 2, 2);
+    delay(3000);
+    ESP.restart();
 }
 
 void setupI2SDAC()
