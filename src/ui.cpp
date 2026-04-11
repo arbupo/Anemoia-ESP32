@@ -29,6 +29,7 @@ Cartridge* UI::selectGame()
         {
             if (isDownPressed(CONTROLLER::Up)) 
             {
+                Serial.println("Button UP pressed");
                 selected--;
                 if (selected < 0)
                 {
@@ -44,6 +45,7 @@ Cartridge* UI::selectGame()
 
             if (isDownPressed(CONTROLLER::Down)) 
             {
+                Serial.println("Button DOWN pressed");
                 selected++; 
                 if (selected > (size - 1))
                 {
@@ -61,6 +63,7 @@ Cartridge* UI::selectGame()
         
         if (isDownPressed(CONTROLLER::A) && (selected >= 0 && selected < size))
         {
+            Serial.println("Button A pressed, selecting game");
             std::string game = "/" + files[selected];
             const char* path = game.c_str();
 
@@ -544,6 +547,7 @@ void UI::settingsMenu(Bus* nes)
 
 void UI::initializeSettings()
 {
+    LOG("Initializing UI...");
     if (!SD.exists("/settings.bin"))
     {
         Settings temp = {100, 100, 0};
@@ -553,6 +557,8 @@ void UI::initializeSettings()
 
     if (hw_config.backlight)
         setBrightness(settings.brightness);
+    
+    LOG("UI successfully initialized");
 }
 
 void UI::loadEmulatorSettings(Bus* nes)

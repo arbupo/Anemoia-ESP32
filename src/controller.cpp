@@ -18,9 +18,15 @@ bool isDownPressed(CONTROLLER button)
 
 void initController()
 {
+    // LOG("Initializing Controller...");
+    Serial.println("Initializing Controller...");
+    delay(10);
     switch (hw_config.controller_type)
     {
     case 0:
+        // LOG("Init GPIO controller");
+        Serial.println("Init GPIO controller...");
+        delay(10);
         pinMode(A_BUTTON, INPUT_PULLUP);
         pinMode(B_BUTTON, INPUT_PULLUP);
         pinMode(LEFT_BUTTON, INPUT_PULLUP);
@@ -33,6 +39,9 @@ void initController()
         break;
 
     case 1:
+        // LOG("Init NES controller");
+        Serial.println("Init NES controller...");
+        delay(10);
         pinMode(CONTROLLER_NES_CLK, OUTPUT);
         pinMode(CONTROLLER_NES_LATCH, OUTPUT);
         pinMode(CONTROLLER_NES_DATA, INPUT);
@@ -40,6 +49,9 @@ void initController()
         break;
 
     case 2:
+        // LOG("Init SNES controller");
+        Serial.println("Init SNES controller...");
+        delay(10);
         pinMode(CONTROLLER_SNES_CLK, OUTPUT);
         pinMode(CONTROLLER_SNES_LATCH, OUTPUT);
         pinMode(CONTROLLER_SNES_DATA, INPUT);
@@ -47,6 +59,9 @@ void initController()
         break;
 
     case 3:
+        // LOG("Init PSX controller");
+        Serial.println("Init PSX controller...");
+        delay(10);
         pinMode(CONTROLLER_PSX_DATA, INPUT_PULLUP);
         pinMode(CONTROLLER_PSX_COMMAND, OUTPUT);
         pinMode(CONTROLLER_PSX_ATTENTION, OUTPUT);
@@ -71,6 +86,7 @@ void initController()
         _controllerRead = PSXControllerRead;
         break;
     }
+    LOG("Controller initialized successfully...");
 }
 
 static uint8_t gpioRead()

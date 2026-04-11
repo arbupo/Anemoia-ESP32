@@ -32,6 +32,7 @@ void setup()
     #ifdef DEBUG
         Serial.begin(115200);
     #endif
+    LOG("Setup initialized");
     
     WiFi.mode(WIFI_OFF);
     esp_wifi_stop();
@@ -64,9 +65,10 @@ void setup()
     // Initialize microsd card
     if(!initSD()) while (true);
     ui.initializeSettings();
-
+    LOG("Initializing Controller - previous...");
     // Setup buttons
     initController();
+    LOG("Setup finalized");
 }
 
 void loop() 
@@ -194,6 +196,7 @@ bool initSD()
         return false;
     }
 
+    LOG("SD Card successfully initialized");
     return true;
 }
 
