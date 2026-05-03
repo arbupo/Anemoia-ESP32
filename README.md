@@ -38,6 +38,9 @@ Want to make a PCB? NextPCB offers PCB fabrication and assembly services with fa
 - [Hardware Overview](#hardware-overview)
   - [Original Hardware](#original-hardware)
   - [Cheap Yellow Display](#cheap-yellow-display)
+  - [Custom-made PCBs](#custom-made-pcbs)
+    - [Module-based PCB](#module-based-pcb)
+    - [Discrete PCB](#discrete-pcb)
   - [Where to Buy](#where-to-buy)
 - [Controls](#controls)
   - [Menu Access](#menu-access)
@@ -192,12 +195,14 @@ There are currently three input methods: Tactile push buttons, an NES/SNES contr
 Also connect the power and ground lines if using a controller. 
 Most controllers should work fine from 3.3V power supply. 
 
+---
+
 ### Cheap Yellow Display
 
-[Cheap Yellow Displays](https://github.com/witnessmenow/ESP32-Cheap-Yellow-Display) (CYD) are an all-in-one ESP32 board that comes with most of the hardware needed in this project already integrated, making it ideal for Anemoia-ESP32. Currently only CYDs with an ST7789 display, such as the CYD2USB, are supported.
+[Cheap Yellow Displays](https://github.com/witnessmenow/ESP32-Cheap-Yellow-Display) (CYD) are an all-in-one ESP32 board that comes with most of the hardware needed in this project already integrated, making it ideal for Anemoia-ESP32. Because of the limited pins brought out by the CYD, it is only practical to use a NES controller.
 
 **Hardware Needed:**
-- Cheap Yellow Display with a 240x320 ST7789 display
+- Cheap Yellow Display
 - NES/SNES controller
 - Speaker (optional) - Can be attached with a 1.25mm JST connector to "SPEAK" or soldered directly
 
@@ -208,6 +213,20 @@ Most controllers should work fine from 3.3V power supply.
 | Clock    | GPIO22 (CN1/P3)|
 | Latch    | GPIO27 (CN1)   |
 | Data     | GPIO35 (P3)    |
+
+---
+### Custom-made PCBs
+The schematics, PCB design files, enclosures, and 3D models are available in the `/hardware` and `/3d-model` folder.
+
+#### Module-based PCB
+A PCB that provides a clean, organized way to connect and manage all peripheral modules in one place.
+![Module-based PCB demo](https://github.com/user-attachments/assets/46687b5f-1b71-4be0-8754-2d366c9603dd)
+![Module-based PCB schematic](hardware/Anemoia-ESP32/schematics/Anemoia-ESP32.png)
+
+#### Discrete PCB
+A PCB that offers a more complete, permanent, and compact handheld by using discrete ICs instead of breakout modules.
+![Discrete PCB demo](https://github.com/user-attachments/assets/29aa4584-0e9d-4032-93b5-9dca02997e03)
+![Discrete PCB schematic](hardware/Anemoia-ESP32-SMD/schematics/Anemoia-ESP32-SMD.png)
 
 ---
 
@@ -308,7 +327,7 @@ https://espressif.github.io/arduino-esp32/package_esp32_index.json
 Copy and paste the TFT_eSPI configuration file into the TFT_eSPI folder.
 1. Navigate to your Arduino Libraries folder:
 (Default location): `Documents/Arduino/libraries/TFT_eSPI`
-2. Copy the provided `User_Setup.h` file from this repository into
+2. Copy your desired `User_Setup.h` file in the `/User_Setups` folder from this repository into
 `TFT_eSPI/` and overwrite the file. Optionally, edit the `#define` pins as desired.
 > [!NOTE]
 > If using a screen with the ILI9341 driver, open `User_Setup.h` in a text editor and comment out `#define ST7789_DRIVER` and uncomment `#define ILI9341_DRIVER`.
