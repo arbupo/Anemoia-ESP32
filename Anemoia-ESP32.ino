@@ -72,6 +72,7 @@ void setup()
     if (!initSD())
         while (true);
     ui.initializeSettings();
+
     LOG("Initializing Controller - previous...");
     // Setup buttons
     initController(hw_config.controller_type);
