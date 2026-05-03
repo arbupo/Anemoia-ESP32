@@ -45,7 +45,7 @@ Cartridge* UI::selectGame()
 
             if (isDownPressed(CONTROLLER::Down))
             {
-                selected++; 
+                selected++;
                 Serial.println("Button DOWN pressed");
                 if (selected > (size - 1))
                 {
