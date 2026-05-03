@@ -541,7 +541,7 @@ void UI::initializeSettings()
         saveSettings(&temp);
     }
     loadSettings(&settings);
-    
+
     if (hw_config.backlight) setBrightness(settings.brightness);
     LOG("UI successfully initialized");
 }
