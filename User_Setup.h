@@ -16,7 +16,7 @@
 #define TFT_MISO   -1
 #define TFT_SCLK   18
 #define TFT_CS     5
-#define TFT_DC     2
+#define TFT_DC     26
 #define TFT_RST    -1
 
 #define TOUCH_CS -1
