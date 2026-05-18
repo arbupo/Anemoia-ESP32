@@ -17,6 +17,7 @@ Cartridge* UI::selectGame()
 
     drawWindowBox(2, 20, screen->width() - 4, screen->height() - 40);
     drawBars();
+    drawRomMode();
     getNesFiles();
     drawFileList();
 
@@ -59,6 +60,38 @@ Cartridge* UI::selectGame()
                 drawFileList();
                 last_input_time = now;
             }
+
+            if (isDownPressed(CONTROLLER::Left))
+            {
+                int screen_pos = selected - scroll_offset;
+                selected -= max_items;
+                if (selected < 0) selected = 0;
+                scroll_offset = selected - screen_pos;
+                if (scroll_offset < 0) scroll_offset = 0;
+                drawFileList();
+                last_input_time = now;
+            }
+
+            if (isDownPressed(CONTROLLER::Right))
+            {
+                int screen_pos = selected - scroll_offset;
+                selected += max_items;
+                if (selected > size - 1) selected = size - 1;
+                scroll_offset = selected - screen_pos;
+                if (scroll_offset < 0) scroll_offset = 0;
+                if (scroll_offset > size - 1) scroll_offset = size - 1;
+                drawFileList();
+                last_input_time = now;
+            }
+
+            if (isDownPressed(CONTROLLER::Select))
+            {
+                settings.rom_backend = (settings.rom_backend + 1) % 2;
+                saveSettings(&settings);
+                drawBars();
+                drawRomMode();
+                last_input_time = now;
+            }
         }
 
         if (isDownPressed(CONTROLLER::A) && (selected >= 0 && selected < size))
@@ -66,7 +99,8 @@ Cartridge* UI::selectGame()
             Serial.println("Button A pressed, selecting game");
             std::string game = "/" + files[selected];
             std::vector<std::string>().swap(files);
-            return new Cartridge(game.c_str());
+            ROMBackend backend = (ROMBackend)settings.rom_backend;
+            return new Cartridge(game.c_str(), backend);
         }
     }
 }
@@ -151,8 +185,8 @@ void UI::drawBars()
     screen->fillRect(0, screen->height() - 16, screen->width(), 16, BAR_COLOR);
     screen->setTextColor(TFT_BLACK, BAR_COLOR);
 
-    int16_t y = screen->height() - 12;
-    int16_t x = 4;
+    const int16_t y = screen->height() - 12;
+    const int16_t x = 4;
 
     screen->setTextColor(TEXT2_COLOR, BAR_COLOR);
     screen->setCursor(x, y);
@@ -594,4 +628,31 @@ void UI::drawText(const char* text, const int16_t x, const int16_t y)
     screen->setCursor(x, y);
     screen->setTextColor(TEXT2_COLOR);
     screen->print(text[0]);
+}
+
+void UI::drawRomMode()
+{
+    const int16_t y = screen->height() - 12;
+    const char* selectText = "Select";
+    const char* mode1 = " RAM mode";
+    const char* mode2 = " Flash mode";
+    const char* currentMode;
+    switch (settings.rom_backend)
+    {
+    case 0: currentMode = mode1; break;
+    case 1: currentMode = mode2; break;
+    default: currentMode = mode1; break;
+    }
+
+    const int16_t select_w = screen->textWidth(selectText);
+    const int16_t mode_w = screen->textWidth(currentMode);
+    const int16_t total_w = mode_w + select_w;
+    const int16_t mode_x = screen->width() - total_w - 8;
+    screen->setCursor(mode_x, y);
+
+    screen->setTextColor(TEXT2_COLOR, BAR_COLOR);
+    screen->print(selectText);
+
+    screen->setTextColor(TFT_BLACK, BAR_COLOR);
+    screen->print(currentMode);
 }
