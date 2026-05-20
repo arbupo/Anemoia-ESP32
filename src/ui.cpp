@@ -571,7 +571,7 @@ void UI::initializeSettings()
     LOG("Initializing UI...");
     if (!SD.exists("/settings.bin"))
     {
-        Settings temp = { 100, 100, 0 };
+        Settings temp = { 10, 100, 0 };
         saveSettings(&temp);
     }
     loadSettings(&settings);
